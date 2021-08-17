@@ -59,12 +59,11 @@
                 medicationsChartData.push(currObj); // each category
             });
 
-            // renderMedicationChart(medicationsChartData);
+            renderMedicationChart(medicationsChartData);
 
             const summaryData = {
                 'medication': medication,
                 'medData': medAllGrouped,
-                'medTrueData': medTrueGrouped,
                 'medPercentage': medPercentage,
                 'headers': headers
             }
@@ -77,8 +76,8 @@
         let headers = Object.assign([], data.headers);
         headers.push('unaffected');
 
-        let medCohort = data.medData[0];
-        let medSelected = data.medTrueData[0];
+        let medCohort = data.medData.filter(obj => obj.variable === "All_Patients").pop()
+        let medSelected = data.medData.filter(obj => obj.variable !== "All_Patients").pop()
 
         let medCohortSum = sumObject(filterObject(medCohort, headers));
         let medSelectedSum = sumObject(filterObject(medSelected, headers));
@@ -257,7 +256,7 @@
     let  medicationSelection = [];
     $.getJSON("feeds/medications.jsp", (data) => {
         let json = $.parseJSON(JSON.stringify(data));
-        medicationSelection.push({'id':'default','text':'Please select a medication'});
+
         json.map((entry) => {
             let selectData = {};
             for (const [key, value] of Object.entries(entry)) {
